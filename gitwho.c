@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 		printf("[github]");
 		ret = set_github_email();
 	} else {
-		printf("[phab]");
+		printf("[gitolite]");
 	}
 exit:
 	return ret;
