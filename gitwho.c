@@ -55,6 +55,8 @@ int remotehost(char *buf, int size)
 	char *ps = strchr(buf, '@');
 	if (ps) {
 		ps ++;
+	} else if (!strncmp("c:", buf, 2)) {
+		ps = buf;
 	} else {
 		ps = strstr(buf, "://");
 		ps += 3;
