@@ -51,7 +51,7 @@ int remotehost(char *buf, int size)
 		return ret;
 	buf[ret] = 0;
 
-	char endchr = ':';
+	const char endchrs[] = ":/";
 	char *ps = strchr(buf, '@');
 	if (ps) {
 		ps ++;
@@ -60,10 +60,9 @@ int remotehost(char *buf, int size)
 	} else {
 		ps = strstr(buf, "://");
 		ps += 3;
-		endchr = '/';
 	}
 	memmove(buf, ps, ret - (ps - buf) + 1);
-	return strchr(buf, endchr) - buf;
+	return strpbrk(buf, endchrs) - buf;
 }
 
 int set_github_email()
