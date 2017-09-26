@@ -11,6 +11,26 @@ FILE *runcmd(const char *cmd)
 	return popen(cmd, "r");
 }
 
+char * _strnstr(const char *big, const char *little, size_t len)
+{
+	int i, j;
+	int llen = strlen(little);
+
+	for (i = 0; i <= len - llen; i++) {
+		for (j = 0; j < llen; j++) {
+			if (big[i+j] != little[j]) {
+				if (big[i+j] == '\0')
+					return NULL;
+				break;
+			}
+		}
+		if (j == llen) {
+			return (char*)&big[i];
+		}
+	}
+	return NULL;
+}
+
 int run_gitremote(char *buf, int size)
 {
 	FILE *f = runcmd("git remote -v 2>/dev/null");
@@ -32,7 +52,7 @@ int gitremote(char *buf, int size)
 	int ret = run_gitremote(buf, size);
 	if (ret <= 0)
 		return 0;
-	char *po = strnstr(buf, "origin", ret);
+	char *po = _strnstr(buf, "origin", ret);
 	if (!po)
 		return -1;
 	/* get to next string */
@@ -67,8 +87,7 @@ int remotehost(char *buf, int size)
 
 int set_github_email()
 {
-	system(GITHUB_GITCONFIG);
-	return 0;
+	return system(GITHUB_GITCONFIG);
 }
 
 #define BUFSIZE 512
@@ -82,7 +101,7 @@ int main(int argc, char *argv[])
 		ret = 0;
 		goto exit;
 	}
-	int isgithub = (int)(strnstr(buf, "github.com", cnt) != NULL);
+	int isgithub = (int)(_strnstr(buf, "github.com", cnt) != NULL);
 	if (isgithub) {
 		printf("[github]");
 		ret = set_github_email();
